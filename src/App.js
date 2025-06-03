@@ -78,26 +78,28 @@ function App() {
   }, []);
 
   return (
-    <div id="drum-machine" className="App container mt-5">
+    <div id="drum-machine" className="text-center container mt-5">
+      <h1 className="mb-4">🎵 Drum Machine</h1>
       <div className="row">
-        <div className="col-md-6 text-center">
-          <div className="d-grid gap-3">
+        <div className="col-md-6 mb-1">
+          <div className="row">
             {clips.map((clip) => (
-              <div
-                key={clip.key}
-                className="drum-pad"
-                id={clip.id}
-                onClick={() => playSound(clip.key)}
-              >
-                {clip.key}
-                <audio className="clip" id={clip.key} src={clip.src}></audio>
+              <div key={clip.key} className="col-4 mb-3">
+                <button
+                  className="btn btn-primary btn-lg w-100 drum-pad"
+                  onClick={() => playSound(clip.key)}
+                  id={`pad-${clip.key}`}
+                >
+                  {clip.key}
+                  <audio className="clip" id={clip.key} src={clip.src}></audio>
+                </button>
               </div>
             ))}
           </div>
         </div>
-        <div className="col-md-6 d-flex align-items-center justify-content-center">
-          <div id="display" className="border p-3 rounded bg-light">
-            {display || "Click a button to play a sound"}
+        <div className="col-md-6 mb-4 d-flex align-items-center justify-content-center">
+          <div id="display" className="border p-4 rounded bg-light w-100">
+            <strong>{display}</strong>
           </div>
         </div>
       </div>
