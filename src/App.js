@@ -1,88 +1,103 @@
+import { useState, useEffect } from "react";
 import "./App.css";
 
+const clips = [
+  {
+    key: "Q",
+    id: "Heater-1",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3",
+  },
+  {
+    key: "W",
+    id: "Heater-2",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3",
+  },
+  {
+    key: "E",
+    id: "Heater-3",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-3.mp3",
+  },
+  {
+    key: "A",
+    id: "Heater-4",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-4_1.mp3",
+  },
+  {
+    key: "S",
+    id: "Clap",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-6.mp3",
+  },
+  {
+    key: "D",
+    id: "Open-HH",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Dsc_Oh.mp3",
+  },
+  {
+    key: "Z",
+    id: "Kick-n'-Hat",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Kick_n_Hat.mp3",
+  },
+  {
+    key: "X",
+    id: "Kick",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/RP4_KICK_1.mp3",
+  },
+  {
+    key: "C",
+    id: "Closed-HH",
+    src: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3",
+  },
+];
+
 function App() {
+  const [display, setDisplay] = useState("");
+  //function to play sound
+  const playSound = (key) => {
+    const audio = document.getElementById(key);
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play();
+      const clip = clips.find((c) => c.key === key);
+      if (clip) {
+        setDisplay(clip.id);
+      }
+    }
+  };
+
+  //useEffect to add event listener for key press
+  useEffect(() => {
+    //function to handle key press
+    const handleKeyDown = (event) => {
+      const key = event.key.toUpperCase();
+      if (clips.some((c) => c.key === key)) {
+        playSound(key);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div id="drum-machine" className="App container mt-5">
       <div className="row">
         <div className="col-md-6 text-center">
           <div className="d-grid gap-3">
-            <div className="drum-pad" id="Heater-1">
-              Q
-              <audio
-                className="clip"
-                id="Q"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Heater-2">
-              W
-              <audio
-                className="clip"
-                id="W"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Heater-3">
-              E
-              <audio
-                className="clip"
-                id="E"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-3.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Heater-4">
-              A
-              <audio
-                className="clip"
-                id="A"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-4_1.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Clap">
-              S
-              <audio
-                className="clip"
-                id="S"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-6.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Open-HH">
-              D
-              <audio
-                className="clip"
-                id="D"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Dsc_Oh.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Kick-n'-Hat">
-              Z
-              <audio
-                className="clip"
-                id="Z"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Kick_n_Hat.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Kick">
-              X
-              <audio
-                className="clip"
-                id="X"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/RP4_KICK_1.mp3"
-              ></audio>
-            </div>
-            <div className="drum-pad" id="Closed-HH">
-              C
-              <audio
-                className="clip"
-                id="C"
-                src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3"
-              ></audio>
-            </div>
+            {clips.map((clip) => (
+              <div
+                key={clip.key}
+                className="drum-pad"
+                id={clip.id}
+                onClick={() => playSound(clip.key)}
+              >
+                {clip.key}
+                <audio className="clip" id={clip.key} src={clip.src}></audio>
+              </div>
+            ))}
           </div>
         </div>
         <div className="col-md-6 d-flex align-items-center justify-content-center">
           <div id="display" className="border p-3 rounded bg-light">
-            Display
+            {display || "Click a button to play a sound"}
           </div>
         </div>
       </div>
